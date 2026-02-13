@@ -8,8 +8,10 @@ use std::net::SocketAddr;
 use handler::proxy_handler;
 mod handler;
 mod verification;
+mod director;
 
 use once_cell::sync::Lazy;
+use tracing::info;
 use dotenv::dotenv;
 use std::env;
 
@@ -19,6 +21,7 @@ static SIG_KEY: Lazy<String> = Lazy::new(|| {
         .expect("SIG_KEY must be set in `.env` file")
 });
 
+/// deprecated feature
 const DBG_MODE: bool = false;
 
 #[tokio::main]
@@ -26,10 +29,6 @@ async fn main() {
     // read .env file..
     dotenv()
         .expect("something goes wrong with `.env` file. maybe, you should create it");
-
-    if DBG_MODE {
-        dbg!(&SIG_KEY.as_str());
-    }
 
     let client = Client::new(); // for NestJS
 
