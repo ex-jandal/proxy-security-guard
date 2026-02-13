@@ -19,7 +19,7 @@ static SIG_KEY: Lazy<String> = Lazy::new(|| {
         .expect("SIG_KEY must be set in `.env` file")
 });
 
-const DBG_MODE: bool = true;
+const DBG_MODE: bool = false;
 
 #[tokio::main]
 async fn main() {
