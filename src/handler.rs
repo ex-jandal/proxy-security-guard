@@ -5,8 +5,10 @@ use axum::{
     response::IntoResponse,
 };
 use reqwest::Client;
+use tracing::{info, debug};
 
 use crate::verification::verify_signature;
+use crate::director::redirect_to_backend;
 use crate::DBG_MODE;
 
 pub async fn proxy_handler(
@@ -18,6 +20,14 @@ pub async fn proxy_handler(
 ) -> impl IntoResponse {
 
 
+    info!("  Receive a New Request");
+    debug!("
+method  = {method:#?}
+uri     = {uri:#?}
+headers = {headers:#?}
+body    = {body:#?}");
+
+    // deprecated feature
     if DBG_MODE {
         println!(
 "------------   New Request ------------
@@ -41,6 +51,7 @@ body    = {body:#?}");
         method == Method::PUT  || 
         method == Method::GET  {
 
+        // deprecated feature
         if DBG_MODE {
             println!("\n---------- 󱎚  Check Signature ----------");
             println!("header_sig = {}", signature.unwrap());
@@ -48,55 +59,38 @@ body    = {body:#?}");
 
         match signature {
             Some(sig) if verify_signature(&body, sig) => {
+                // deprecated feature
                 if DBG_MODE {
                     println!("  Integrity Verified");
                 }
             }
             _ => {
+                // deprecated feature
                 if DBG_MODE {
                     println!("  Signature mismatch or missing!");
                     println!("\nresponse_status = {:#?}", StatusCode::UNAUTHORIZED);
                     println!("---------- End of the Request ----------");
                 }
+
+                info!("  Signature mismatch or missing!");
+                info!("response_status = {:#?}", StatusCode::UNAUTHORIZED);
+                info!("󰅑  Finish Request");
+
                 return (StatusCode::UNAUTHORIZED, "Invalid Integrity Signature")
                     .into_response();
             }
         }
     }
 
+
+    // deprecated feature
     if DBG_MODE {
         println!("\n--------   Redirect to NestJS ---------");
     }
 
     // Direct to NestJS
-    let response = client
-        .request(method, &target_url)
-        .headers(headers)
-        .body(body)
-        .send()
-        .await;
+    let response = redirect_to_backend(method, target_url, headers, body, client).await;
+    info!("󰅑  Finish Request");
 
-    match response {
-        Ok(res) => {
-            let status = res.status();
-            let headers = res.headers().clone();
-            let body = res.bytes().await.unwrap_or_default();
-
-            if DBG_MODE {
-                println!("response = {:#?}", &body);
-                println!("\nresponse_status = {status:#?}");
-                println!("---------- End of the Request ----------\n\n");
-            }
-
-            (status, headers, body).into_response()
-        }
-        Err(res) => {
-            if DBG_MODE {
-                println!("response = {:#?}", res);
-                println!("\nresponse_status = {:#?}", StatusCode::BAD_GATEWAY);
-                println!("---------- End of the Request ----------\n\n");
-            }
-            (StatusCode::BAD_GATEWAY, "NestJS is unreachable").into_response()
-        }
-    }
+    response
 }

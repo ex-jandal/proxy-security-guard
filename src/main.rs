@@ -21,7 +21,7 @@ static SIG_KEY: Lazy<String> = Lazy::new(|| {
         .expect("SIG_KEY must be set in `.env` file")
 });
 
-/// deprecated feature
+// deprecated feature
 const DBG_MODE: bool = false;
 
 #[tokio::main]
@@ -30,6 +30,7 @@ async fn main() {
     dotenv()
         .expect("something goes wrong with `.env` file. maybe, you should create it");
 
+    tracing_subscriber::fmt::init();
     let client = Client::new(); // for NestJS
 
     let app = Router::new()
@@ -37,7 +38,9 @@ async fn main() {
         .with_state(client);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 4000));
-    println!("\n\t󰞀  Fanouni Security Guard running on {},\n\t  with{} Debugging Outputs", 
+
+    info!("running on {}", addr);
+    println!("\t󰞀  Fanouni Security Guard running on {},\n\t  with{} Debugging Outputs", 
         addr, 
         if DBG_MODE {""} else {"out"}
     );
