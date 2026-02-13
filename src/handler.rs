@@ -43,12 +43,12 @@ body    = {body:#?}");
 
         if DBG_MODE {
             println!("\n---------- 󱎚  Check Signature ----------");
+            println!("header_sig = {}", signature.unwrap());
         }
 
         match signature {
             Some(sig) if verify_signature(&body, sig) => {
                 if DBG_MODE {
-                    println!("header_sig = {}", sig);
                     println!("  Integrity Verified");
                 }
             }
