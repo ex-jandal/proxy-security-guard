@@ -1,5 +1,4 @@
 use ed25519_dalek::{Signature, Signer, SigningKey};
-use rand_core::OsRng;
 
 use crate::SIG_KEY;
 
@@ -15,12 +14,4 @@ pub fn sign_artwork(data: &[u8]) -> String {
     let signature: Signature = signing_key.sign(data);
     
     hex::encode(signature.to_bytes())
-}
-
-pub fn generate_keys() {
-    let mut csprng = OsRng;
-    let signing_key = SigningKey::generate(&mut csprng);
-    println!("ED25519 PRIVATE_KEY (Hex): {}", 
-        hex::encode(signing_key.to_bytes())
-    );
 }
