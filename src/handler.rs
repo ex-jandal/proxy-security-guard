@@ -10,7 +10,6 @@ use tracing::{info, debug};
 use crate::crypto::hashing::verify_signature;
 use crate::crypto::signature::sign_artwork;
 use crate::director::redirect_to_backend;
-use crate::DBG_MODE;
 
 pub async fn proxy_handler(
     State(client): State<Client>,
@@ -20,23 +19,12 @@ pub async fn proxy_handler(
     body: Bytes,
 ) -> impl IntoResponse {
 
-
     info!("  Receive a New Request");
     debug!("
 method  = {method:#?}
 uri     = {uri:#?}
 headers = {headers:#?}
 body    = {body:#?}");
-
-    // deprecated feature
-    if DBG_MODE {
-        println!(
-"------------   New Request ------------
-method  = {method:#?}
-uri     = {uri:#?}
-headers = {headers:#?}
-body    = {body:#?}");
-    }
 
     let path_query = uri.path_and_query()
         .map(|pq| pq.as_str())
@@ -52,27 +40,11 @@ body    = {body:#?}");
         method == Method::PUT  || 
         method == Method::GET  {
 
-        // deprecated feature
-        if DBG_MODE {
-            println!("\n---------- 󱎚  Check Signature ----------");
-            println!("header_sig = {}", signature.unwrap());
-        }
-
         match signature {
             Some(sig) if verify_signature(&body, sig) => {
-                // deprecated feature
-                if DBG_MODE {
-                    println!("  Integrity Verified");
-                }
+                info!("  Integrity Verified");
             }
             _ => {
-                // deprecated feature
-                if DBG_MODE {
-                    println!("  Signature mismatch or missing!");
-                    println!("\nresponse_status = {:#?}", StatusCode::UNAUTHORIZED);
-                    println!("---------- End of the Request ----------");
-                }
-
                 info!("  Signature mismatch or missing!");
                 info!("response_status = {:#?}", StatusCode::UNAUTHORIZED);
                 info!("󰅑  Finish Request");
@@ -96,16 +68,7 @@ body    = {body:#?}");
         );
 
         info!("󰏘  artwork notarized with seal: {}...", &copyright_sig[0..10]);
-        if DBG_MODE {
-            println!("󰏘  artwork notarized with seal: {}...", &copyright_sig[0..10]);
-        }
         debug!("final_headers = {:#?}", final_headers);
-    }
-
-    // deprecated feature
-    if DBG_MODE {
-        println!("final_headers = {:#?}", final_headers);
-        println!("\n--------   Redirect to NestJS ---------");
     }
 
     // Direct to NestJS

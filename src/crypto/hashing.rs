@@ -2,7 +2,7 @@ use hmac::{Hmac, Mac};
 use sha2::Sha256;
 use tracing::info;
 
-use crate::{DBG_MODE, HMAC_KEY};
+use crate::HMAC_KEY;
 
 type HmacSha256 = Hmac<Sha256>;
 
@@ -13,11 +13,6 @@ pub fn verify_signature(body: &[u8], signature_hex: &str) -> bool {
 
     let result = mac.finalize();
     let code_bytes = result.into_bytes();
-
-    // deprecated feature
-    if DBG_MODE {
-        println!("  real_sig = {}", hex::encode(code_bytes));
-    }
 
     info!("real request signature = {}", hex::encode(code_bytes));
     

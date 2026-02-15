@@ -6,7 +6,6 @@ use axum::{
 use reqwest::Client;
 
 use tracing::{debug, info};
-use crate::DBG_MODE;
 
 pub async fn redirect_to_backend(
     method: Method, 
@@ -29,13 +28,6 @@ pub async fn redirect_to_backend(
             let headers = res.headers().clone();
             let body = res.bytes().await.unwrap_or_default();
 
-            // deprecated feature
-            if DBG_MODE {
-                println!("response = {:#?}", &body);
-                println!("\nresponse_status = {status:#?}");
-                println!("---------- End of the Request ----------\n\n");
-            }
-
             info!("sent successfully to ({})", target_url);
             debug!("{:#?}", &body);
             info!("response_status = {status:#?}");
@@ -43,13 +35,6 @@ pub async fn redirect_to_backend(
             (status, headers, body).into_response()
         }
         Err(res) => {
-            // deprecated feature
-            if DBG_MODE {
-                println!("response = {:#?}", res);
-                println!("\nresponse_status = {:#?}", StatusCode::BAD_GATEWAY);
-                println!("---------- End of the Request ----------\n\n");
-            }
-
             info!("{:#?}", res.to_string());
             info!("{:#?}", StatusCode::BAD_GATEWAY);
 

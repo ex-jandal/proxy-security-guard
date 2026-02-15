@@ -34,9 +34,6 @@ static SIG_KEY: Lazy<String> = Lazy::new(|| {
         .expect("SIG_KEY must be set in `.env` file")
 });
 
-/// deprecated feature
-const DBG_MODE: bool = false;
-
 #[tokio::main]
 async fn main() {
     // read .env file..
@@ -70,7 +67,7 @@ async fn main() {
     info!("running on {}", addr);
     println!("\t󰞀  Fanouni Security Guard running on {},\n\t  with{} Debugging Outputs", 
         addr, 
-        if DBG_MODE {""} else {"out"}
+        if args.debug {""} else {"out"}
     );
     
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
