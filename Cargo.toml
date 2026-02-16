@@ -2,15 +2,19 @@
 name = "Fanouni-security-guard"
 version = "0.1.0"
 edition = "2024"
+authors = ["Sultan Majed"]
+homepage = "https://github.com/ex-jandal/fanouni-security-guard"
+license = "MIT"
+keywords = ["security", "guard", "Fanouni"]
 
 [dependencies]
 tokio = { version = "1.49", features = ["full"] }
 
-axum =  "0.8"
-axum-extra ="0.12"
+axum = { version = "0.8", features = ["multipart"] }
+futures-util = "0.3"
 
 tower-http = { version = "0.6", features = ["cors"] }
-reqwest = "0.13"
+reqwest = { version = "0.13", features = ["json", "form", "multipart"] }
 serde = { version = "1.0", features = ["derive"] }
 
 hmac = "0.12"
