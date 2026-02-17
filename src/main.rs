@@ -36,16 +36,11 @@ static SIG_KEY: Lazy<String> = Lazy::new(|| {
 
 #[tokio::main]
 async fn main() {
-    // read .env file..
-    dotenv()
-        .expect("something goes wrong with `.env` file. maybe, you should create it");
-
     let args = Args::parse();
     if args.generate_keys {
         generate_keys();
         return; 
     }
-
     if args.debug {
         let subscriber = tracing_subscriber::fmt()
             .with_env_filter(EnvFilter::new("debug"))
@@ -56,6 +51,10 @@ async fn main() {
             .expect("setting default subscriber failed");
     }
 
+    // read .env file..
+    dotenv()
+        .expect("something goes wrong with `.env` file. maybe, you should create it");
+
     let client = Client::new(); // for NestJS
 
     let app = Router::new()
@@ -64,11 +63,12 @@ async fn main() {
 
     let addr = SocketAddr::from(([127, 0, 0, 1], args.port));
 
-    info!("running on {}", addr);
     println!("\t󰞀  Fanouni Security Guard running on {},\n\t  with{} Debugging Outputs", 
         addr, 
         if args.debug {""} else {"out"}
     );
+
+    info!("running on {}", addr);
     
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();
