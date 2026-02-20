@@ -35,7 +35,7 @@ pub async fn proxy_handler(
         .unwrap_or("");
 
     let signature = headers
-        .get("x-fanouni-signature")
+        .get("x-psg-signature")
         .and_then(|h| h.to_str().ok());
 
     if content_type.contains("multipart/form-data") {
@@ -84,7 +84,7 @@ pub async fn proxy_handler(
                     let copyright_sig = sign_artwork(&file_bytes);
                     
                     final_headers.insert(
-                        "X-Fanouni-Copyright-Seal",
+                        "X-PSG-Copyright-Seal",
                         copyright_sig.parse().unwrap()
                     );
                     info!("󰏘  Artwork notarized with seal: {}...", &copyright_sig[0..10]);

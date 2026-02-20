@@ -63,7 +63,7 @@ async fn main() {
 
     let addr = SocketAddr::from(([127, 0, 0, 1], args.port));
 
-    println!("\t󰞀  Fanouni Security Guard running on {},\n\t  with{} Debugging Outputs", 
+    println!("\t󰞀  Proxy Security Guard running on {},\n\t  with{} Debugging Outputs", 
         addr, 
         if args.debug {""} else {"out"}
     );

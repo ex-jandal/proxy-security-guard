@@ -482,28 +482,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42703706b716c37f96a77aea830392ad231f44c9e9a67872fa5548707e11b11c"
 
 [[package]]
-name = "fsg"
-version = "0.3.0"
-dependencies = [
- "axum",
- "clap",
- "dotenv",
- "ed25519-dalek",
- "futures-util",
- "hex",
- "hmac",
- "once_cell",
- "rand_core 0.6.4",
- "reqwest",
- "serde",
- "sha2",
- "tokio",
- "tower-http",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "futures-channel"
 version = "0.3.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1136,6 +1114,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8fd00f0bb2e90d81d1044c2b32617f68fcb9fa3bb7640c23e9c748e53fb30934"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "psg"
+version = "0.4.0"
+dependencies = [
+ "axum",
+ "clap",
+ "dotenv",
+ "ed25519-dalek",
+ "futures-util",
+ "hex",
+ "hmac",
+ "once_cell",
+ "rand_core 0.6.4",
+ "reqwest",
+ "serde",
+ "sha2",
+ "tokio",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
