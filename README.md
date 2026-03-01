@@ -47,7 +47,7 @@ These are standard system libraries and are typically pre-installed on most Linu
 
 2.  Generate the necessary cryptographic keys:
     ```bash
-    cargo run -- --generate-keys
+    cargo run -- --generate-keys > .env
     ```
     This will create a `.env` file with the `HMAC_KEY` and `SIG_KEY` environment variables.
 
